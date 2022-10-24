@@ -4,13 +4,13 @@
 
 -Features
   -Inventory System
-    -Add Itens.
-    -Remove Itens.
-    -Find Itens.
+  -Add Itens.
+  -Remove Itens.
+  -Find Itens.
     
-   -Itens
-    -Add count
-    -Remove Count
+  -Itens
+  -Add count
+  -Remove Count
     
   -Item Menu
-    -Transfender Amount Itens (click Right Mouse Button in Item).
+  -Transfender Amount Itens (click Right Mouse Button in Item).
