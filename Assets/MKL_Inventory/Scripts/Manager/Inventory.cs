@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 
 namespace MKL.Inventory
-{  
+{
     public class Inventory : MonoBehaviour
     {
         [Space(1)]
@@ -106,10 +106,13 @@ namespace MKL.Inventory
             int i = 0;
             foreach (Item item in _Inventorybase.ItemList)
             {
-                ItemList.Add
-                (
-                    new Item(itemBase: item.itemBase, count: item.Count, bagId: BagId, ItemId: i)
-                );
+                if (!item.IsEmply)
+                {
+                    ItemList.Add
+                    (
+                        new Item(itemBase: item.itemBase, count: item.Count, bagId: BagId, ItemId: i)
+                    );
+                }
                 i++;
             }
 
@@ -152,7 +155,7 @@ namespace MKL.Inventory
 
             _weight = (float)Math.Round(WeightTotal, 2);
         }
-        public void ClearInventory() 
+        public void ClearInventory()
         {
             _ItemList = new List<Item>();
             UpdateInventory();

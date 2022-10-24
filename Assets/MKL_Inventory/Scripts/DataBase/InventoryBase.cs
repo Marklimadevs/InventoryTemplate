@@ -60,9 +60,10 @@ namespace MKL.Inventory
         {
             get => _database;
         }
+        
         public void AddItem(ItemBase newitem)
         {
-            _ItemList.Add(new Item(newitem, 1, 0, _ItemList.Count));
+            _ItemList.Add(new Item(newitem, count: 1, bagId:0, _ItemList.Count));
         }
         public void Clear()
         {
@@ -74,6 +75,11 @@ namespace MKL.Inventory
 
 #if UNITY_EDITOR
 
+        [ContextMenu("LoadByDataBase")]
+        public void LoadByDataBase()
+        {
+            _ItemList = DataBase.GetItemList();
+        }
         private void OnValidate()
         {
             foreach (var item in ItemList)

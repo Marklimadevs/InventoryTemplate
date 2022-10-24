@@ -1,6 +1,5 @@
-using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace MKL.Inventory
@@ -16,7 +15,6 @@ namespace MKL.Inventory
         [SerializeField] private bool _IsStackable = true;
         [SerializeField] private Sprite _UiIcon;
 
-#if UNITY_EDITOR
         
         public void AddToInventory(InventoryBase _inventoryBase) 
         {
@@ -71,7 +69,7 @@ namespace MKL.Inventory
             //Selection.activeObject = asset;
         }
 
-#endif
 
     }
 }
+#endif

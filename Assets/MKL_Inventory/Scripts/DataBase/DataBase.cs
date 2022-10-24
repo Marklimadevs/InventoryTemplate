@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.TextCore.Text;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -44,14 +45,45 @@ namespace MKL.Inventory
 
 #if UNITY_EDITOR
 
-        private void OnValidate()
+        [ContextMenu("Get All Items In Project")]
+        public void GetAllItemsInProject() 
+        {           
+            Items.Clear();
+
+            string[] assetNames = AssetDatabase.FindAssets("Item", null);
+            Items.Clear();
+            foreach (string SOName in assetNames)
+            {
+                var SOpath = AssetDatabase.GUIDToAssetPath(SOName);
+                var character = AssetDatabase.LoadAssetAtPath<ItemBase>(SOpath);
+                if (character != null) 
+                {
+                    Items.Add(character);
+                }
+            }
+        }
+        public static T[] GetAllInstances<T>() where T : ScriptableObject
         {
+            string[] guids = AssetDatabase.FindAssets("t:" + typeof(T).Name);  //FindAssets uses tags check documentation for more info
+            T[] a = new T[guids.Length];
+
+            for (int i = 0; i < guids.Length; i++)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guids[i]);
+                a[i] = AssetDatabase.LoadAssetAtPath<T>(path);
+            }
+
+            return a;
 
         }
-
         internal void Clear()
         {
             Items.Clear();
+        }
+
+        private void OnValidate()
+        {
+
         }
 
 #endif
