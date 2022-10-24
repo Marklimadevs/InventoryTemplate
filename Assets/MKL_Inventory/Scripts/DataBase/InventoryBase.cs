@@ -24,7 +24,7 @@ namespace MKL.Inventory
         }
         public float Weight
         {
-            get 
+            get
             {
                 UpdateWeight();
                 return _weight;
@@ -59,6 +59,15 @@ namespace MKL.Inventory
         public DataBase DataBase
         {
             get => _database;
+        }
+        public void AddItem(ItemBase newitem)
+        {
+            _ItemList.Add(new Item(newitem, 1, 0, _ItemList.Count));
+        }
+        public void Clear()
+        {
+            _ItemList = new List<Item>();
+            UpdateWeight();
         }
 
         #region Editor --------------------------------------

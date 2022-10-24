@@ -4,9 +4,8 @@ using UnityEngine;
 using System;
 
 namespace MKL.Inventory
-{
-    [Serializable]
-    public class Inventory
+{  
+    public class Inventory : MonoBehaviour
     {
         [Space(1)]
         [Header("INVENTORY CONFIG------------------------------------")]
@@ -152,6 +151,11 @@ namespace MKL.Inventory
             }
 
             _weight = (float)Math.Round(WeightTotal, 2);
+        }
+        public void ClearInventory() 
+        {
+            _ItemList = new List<Item>();
+            UpdateInventory();
         }
 
         //Privates -----------------------------------------------------------------------

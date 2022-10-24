@@ -301,7 +301,7 @@ MonoBehaviour:
   m_Vertical: 1
   m_MovementType: 2
   m_Elasticity: 1
-  m_Inertia: 1
+  m_Inertia: 0
   m_DecelerationRate: 1
   m_ScrollSensitivity: 40
   m_Viewport: {fileID: 115025685941792850}
@@ -1015,14 +1015,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Debug: 0
   _Loaded: 0
-  _inventory:
-    _name: Bag
-    _bagId: 0
-    _weight: 0
-    _weightMax: 1000
-    _Inventorybase: {fileID: 11400000, guid: 999effd9b8600b7409ebdfdd8ae7c9ff, type: 2}
-    _loaded: 0
-    _ItemList: []
+  _inventory: {fileID: 0}
   _itemTemplate: {fileID: 2591695490630330609, guid: a3710917f772361498913c8ad02918f3, type: 3}
   _Content: {fileID: 115025684595433554}
   _Animator: {fileID: 8928745849231778497}

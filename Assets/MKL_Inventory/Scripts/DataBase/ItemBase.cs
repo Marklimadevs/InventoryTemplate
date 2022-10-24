@@ -21,6 +21,7 @@ namespace MKL.Inventory
         [SerializeField] private bool _enableDurability = false;
         [SerializeField] private int _durabilityValue = 100;
         [SerializeField] private int _durabilityMax = 100;
+
         public string Name
         {
             get => _itemName != null ? _itemName : "";
@@ -65,6 +66,14 @@ namespace MKL.Inventory
         }
 
         #endregion
+        public ItemBase(string _itemName, string _itemCategory , float _weight , bool _IsStackable, Sprite _UiIcon) 
+        {
+            this._itemName = _itemName;
+            this._itemCategory = _itemCategory;
+            this._weight = _weight;
+            this._IsStackable = _IsStackable;
+            this._UiIcon = _UiIcon;
+        }
 
         #region Editor --------------------------------------
 

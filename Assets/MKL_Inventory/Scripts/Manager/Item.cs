@@ -12,7 +12,10 @@ namespace MKL.Inventory
     {
         public Item(ItemBase itemBase, int count, int bagId, int ItemId)
         {
-            this._itemBase = itemBase;
+            if (itemBase != null)
+            {
+                this._itemBase = itemBase;
+            }
             this._count = count;
             this._bagId = bagId;
             this._ItemId = ItemId;
@@ -89,7 +92,7 @@ namespace MKL.Inventory
         }
         public float DurabilityPorcent
         {
-            get 
+            get
             {
                 _durabilityPorcent = _durabilityValue / _durabilityMax;
                 return _durabilityPorcent;
@@ -119,16 +122,19 @@ namespace MKL.Inventory
         #region Metodos      
         public void LoadItem()
         {
-            _itemName = _itemBase.Name;
-            _weight = _itemBase.Weight;
-            _IsStackable = _itemBase.IsStackable;
-            _uiIcon = _itemBase.UiIcon;
-            _itemCategory = _itemBase.ItemCategory;
-            _enableDurability = _itemBase.EnableDurability;
-            _durabilityValue = _itemBase.DurabilityValue;
-            _durabilityPorcent = _itemBase.DurabilityPorcent;
-            _durabilityMax = _itemBase.DurabilityMax;
-        }      
+            if (_itemBase != null)
+            {
+                _itemName = _itemBase.Name;
+                _weight = _itemBase.Weight;
+                _IsStackable = _itemBase.IsStackable;
+                _uiIcon = _itemBase.UiIcon;
+                _itemCategory = _itemBase.ItemCategory;
+                _enableDurability = _itemBase.EnableDurability;
+                _durabilityValue = _itemBase.DurabilityValue;
+                _durabilityPorcent = _itemBase.DurabilityPorcent;
+                _durabilityMax = _itemBase.DurabilityMax;
+            }
+        }
         public void Add(int value)
         {
             _count += value;

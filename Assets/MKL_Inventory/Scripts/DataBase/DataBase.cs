@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -12,9 +13,12 @@ namespace MKL.Inventory
      menuName = "MKL/Inventory/New Data Base")]
     public class DataBase : ScriptableObject
     {
-        public string FindItensInPath;
-        public ItemBase[] Items;
+        public List<ItemBase> Items;
 
+        public void AddItem(ItemBase newItemBase) 
+        {
+            Items.Add(newItemBase);
+        }
         public ItemBase GetItembase(int index)
         {
             return Items[index];
@@ -35,17 +39,6 @@ namespace MKL.Inventory
         {
             return new Item(Items[index], 1, 0, 0);
         }
-        public ItemBase GetItem(ItemBase itemBase)
-        {
-            foreach (ItemBase item in Items)
-            {
-                if (itemBase.Name == item.Name)
-                {
-                    return item;
-                }
-            }
-            return null;
-        }
 
         #region Editor --------------------------------------
 
@@ -54,6 +47,11 @@ namespace MKL.Inventory
         private void OnValidate()
         {
 
+        }
+
+        internal void Clear()
+        {
+            Items.Clear();
         }
 
 #endif
