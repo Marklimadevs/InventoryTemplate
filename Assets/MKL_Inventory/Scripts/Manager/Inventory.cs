@@ -15,6 +15,7 @@ namespace MKL.Inventory
         [SerializeField] private float _weight;
         [SerializeField] private float _weightMax = 100;
         [SerializeField] private InventoryBase _Inventorybase;
+        [SerializeField] private bool _autoLoad;
 
         [Space(1)]
         [Header("INVENTORY ITENS------------------------------------")]
@@ -23,7 +24,7 @@ namespace MKL.Inventory
         [SerializeField] bool _loaded = false;
         [SerializeField] private List<Item> _ItemList;
 
-        #region Propriedades
+        #region Propriedades-------------------------------------------------------------
         public string Name
         {
             get => _name;
@@ -56,8 +57,7 @@ namespace MKL.Inventory
             get => _ItemList;
         }
         #endregion
-
-        #region Metodos
+        #region Metodos -----------------------------------------------------------------
         //Publics -----------------------------------------------------------------------
         public void AddItem(Item NewItem, int count, out bool _return)
         {
@@ -76,7 +76,7 @@ namespace MKL.Inventory
                 {
                     CreateNewItem(NewItem, count);
                 }
-                _return = true;
+                _return = true;                                
                 UpdateInventory();
             }
         }
@@ -101,47 +101,41 @@ namespace MKL.Inventory
         }
 
         //Updates -----------------------------------------------------------------------
+        private void Start()
+        {
+            if (this._autoLoad && !this.Loaded)
+            {
+                LoadInventory();
+            }
+        }
         public void LoadInventory()
         {
-            int i = 0;
-            foreach (Item item in _Inventorybase.ItemList)
+            ItemList.Clear();
+
+            if (_Inventorybase != null)
             {
-                if (!item.IsEmply)
+                //Debug.Log($"Load Inventory {_name}",this);
+                _name = _Inventorybase.Name;
+                _weightMax = _Inventorybase.WeightMax;
+                
+                int i = 0;
+                foreach (Item item in _Inventorybase.ItemList)
                 {
-                    ItemList.Add
-                    (
-                        new Item(itemBase: item.itemBase, count: item.Count, bagId: BagId, ItemId: i)
-                    );
+                    if (!item.IsEmply)
+                    {
+                        ItemList.Add
+                        (
+                            new Item(itemBase: item.itemBase, count: item.Count, bagId: BagId, ItemId: i)
+                        );
+                    }
+                    i++;
                 }
-                i++;
+                UpdateInventory();             
+                _loaded = true;
             }
-
-            UpdateInventory();
-
-            _loaded = true;
-        }
-        public void LoadDebugInventory()
-        {
-            int i = 0;
-            foreach (Item item in _Inventorybase.DataBase.GetItemList())
-            {
-                ItemList.Add
-                (
-                   new Item(itemBase: item.itemBase, count: item.Count, bagId: BagId, ItemId: i)
-                );
-                i++;
-            }
-            _weightMax = _Inventorybase.WeightMax;
-            _name = _Inventorybase.Name;
-            UpdateInventory();
-
-            _loaded = true;
         }
         public void UpdateInventory()
         {
-            _weightMax = _Inventorybase.WeightMax;
-            _name = _Inventorybase.Name;
-
             int i = 0;
             float WeightTotal = 0;
 
@@ -158,7 +152,8 @@ namespace MKL.Inventory
         public void ClearInventory()
         {
             _ItemList = new List<Item>();
-            UpdateInventory();
+            _loaded = false;
+            _weight = 0;
         }
 
         //Privates -----------------------------------------------------------------------
@@ -216,16 +211,21 @@ namespace MKL.Inventory
                 )
             );
         }
-
         #endregion
-
-        #region Editor --------------------------------------
+        #region Delegates----------------------------------------------------------------
+        public delegate void ItemAddHandle();
+        public event ItemAddHandle AddedItem;
+        #endregion
+        #region Editor ------------------------------------------------------------------
 
 #if UNITY_EDITOR
 
         private void OnValidate()
         {
-
+            foreach (var item in _ItemList)
+            {
+                item.LoadItem();
+            }
         }
 
 #endif

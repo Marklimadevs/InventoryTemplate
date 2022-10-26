@@ -6,16 +6,15 @@ using TMPro;
 namespace MKL.InventoryUI
 {
     using MKL.Inventory;
+    using System;
 
     /// <summary>
     /// Representacao de um Inventario na UI
     /// </summary>
     public class UI_Inventory : MonoBehaviour
     {
-        [SerializeField] private bool _Debug = false;
-        [SerializeField] private bool _Loaded = false;
         [Space(2)]
-        [SerializeField] private Inventory _inventory;
+        [SerializeField] public Inventory _inventory;
         [Space(2)]
         [Header("Config -------------------------------")]
         [SerializeField] private UI_Item _itemTemplate;
@@ -31,20 +30,49 @@ namespace MKL.InventoryUI
         [SerializeField] GroupType _groupType;
 
         #region Functions -----------------------------------
+        public void Start()
+        {
+            UpdateInventory(_inventory);
+        }
         public bool AddItem(Item item, int Value = 1)
         {
-            _inventory.AddItem(item, Value, out bool _return);
-            if (_return)
+            if (_inventory != null)
             {
-                OpenInventory();
+                _inventory.AddItem(item, Value, out bool _return);
+                if (_return)
+                {
+                    OpenInventory();
+                    if (onAddedItem != null)
+                    {
+                        onAddedItem.Invoke();
+                    }
+                }
+                return _return;
             }
-            return _return;
+            else
+            {
+                return false;
+            }
         }
         public bool RemoveItem(Item item, int Value = 1)
         {
-            _inventory.RemoveItem(item, Value, out bool _return);
-            return _return;
-        }        
+            if (_inventory != null)
+            {
+                _inventory.RemoveItem(item, Value, out bool _return);
+                if (_return)
+                {
+                    if (onRemovedItem != null)
+                    {
+                        onRemovedItem.Invoke();
+                    }
+                }
+                return _return;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public void OpenInventory()
         {
             ToggleInventory(true);
@@ -52,8 +80,12 @@ namespace MKL.InventoryUI
             {
                 _toogle.isOn = true;
             }
+            if (onOpenInventory != null)
+            {
+                onOpenInventory.Invoke(_inventory.BagId);
+            }
         }
-        public void CloseInventory() 
+        public void CloseInventory()
         {
             ToggleInventory(false);
             if (_toogle != null)
@@ -73,45 +105,71 @@ namespace MKL.InventoryUI
 
         #region Updates --------------------------------------
 
-        public void UpdateInventory()
+        public void UpdateInventory(Inventory _inv = null)
         {
             foreach (Transform child in _Content)
             {
                 Destroy(child.gameObject);
             }
 
-            if (!_Loaded)
+            _inventory = _inv;
+            if (_inventory != null)
             {
-                if (!_Debug)
-                    _inventory.LoadInventory();
-                else
-                    _inventory.LoadDebugInventory();
-
-                _Loaded = true;
-            }
-
-
-            UpdateSorting();
-            int i = 0;
-
-            foreach (var item in _inventory.ItemList)
-            {
-                if (item != null && !item.IsEmply)
+                if(!_inventory.Loaded)
                 {
-                    UI_Item newItemDisplay = Instantiate(_itemTemplate, _Content);
-                    newItemDisplay.Updateitem(item, i);
+                    _inventory.LoadInventory();
                 }
-                i++;
-            }
 
+                if (onLoadedInventory != null)
+                {
+                    onLoadedInventory.Invoke(_inventory.BagId);
+                }
+
+                UpdateSorting();
+
+                int i = 0;
+                foreach (var item in _inventory.ItemList)
+                {
+                    if (item != null && !item.IsEmply)
+                    {
+                        UI_Item newItemDisplay = Instantiate(_itemTemplate, _Content);
+                        newItemDisplay.Updateitem(item, i);
+                    }
+                    i++;
+                }
+            }
+            UpdateTexts();
         }
         public void UpdateTexts()
         {
             if (_txtInventoryName != null)
             {
-                _txtInventoryName.SetText($"{_inventory.Name} ({_inventory.Weight}/{_inventory.WeightMax})");
+                if (_inventory != null)
+                {
+                    _txtInventoryName.SetText($"{_inventory.Name} ({_inventory.Weight}/{_inventory.WeightMax})");
+                }
+                else
+                {
+                    _txtInventoryName.SetText("");
+                }
             }
         }
+
+        #endregion
+
+        #region Delegates -------------------------------------
+
+        public delegate void OnLoadedInventory(int id);
+        public event OnLoadedInventory onLoadedInventory;
+
+        public delegate void OnOpenInventory(int id);
+        public event OnOpenInventory onOpenInventory;
+        public delegate void OnRemovedInventory();
+        public event OnRemovedInventory onRemovedItem;
+
+        public delegate void OnAddedItem();
+        public event OnAddedItem onAddedItem;
+
 
         #endregion
 
@@ -135,34 +193,36 @@ namespace MKL.InventoryUI
         {
             _sortingType = (SortingType)Value;
             UpdateSorting();
-            UpdateInventory();
+            UpdateInventory(this._inventory);
         }
         public void UpdateSorting()
         {
-            if (_sortingType == SortingType.None)
+            if (_inventory != null)
             {
+                if (_sortingType == SortingType.None)
+                {
 
-            }
-            else if (_sortingType == SortingType.Name)
-            {
-                SortByName();
-            }
-            else if (_sortingType == SortingType.Category)
-            {
-                SortByCategory();
-            }
-            else if (_sortingType == SortingType.Weight)
-            {
-                SortByWeight();
-            }
-            else if (_sortingType == SortingType.Count)
-            {
-                SortByCount();
+                }
+                else if (_sortingType == SortingType.Name)
+                {
+                    SortByName();
+                }
+                else if (_sortingType == SortingType.Category)
+                {
+                    SortByCategory();
+                }
+                else if (_sortingType == SortingType.Weight)
+                {
+                    SortByWeight();
+                }
+                else if (_sortingType == SortingType.Count)
+                {
+                    SortByCount();
+                }
             }
         }
         private void SortByName()
         {
-
             _inventory.ItemList.Sort(delegate (Item x, Item y)
             {
                 if (x.Name == null && y.Name == null) return 0;

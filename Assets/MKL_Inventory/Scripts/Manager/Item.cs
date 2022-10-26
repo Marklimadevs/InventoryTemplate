@@ -134,6 +134,7 @@ namespace MKL.Inventory
                 _durabilityPorcent = _itemBase.DurabilityPorcent;
                 _durabilityMax = _itemBase.DurabilityMax;
             }
+            _weightMax = WeightMax;
         }
         public void Add(int value)
         {
