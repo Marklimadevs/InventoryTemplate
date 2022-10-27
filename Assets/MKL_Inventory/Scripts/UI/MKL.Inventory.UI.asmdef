@@ -2,7 +2,6 @@
     "name": "MKL.Inventory.UI",
     "rootNamespace": "",
     "references": [
-        "GUID:6a05dfc72f4eba044a484987acafc3c1",
         "GUID:6055be8ebefd69e48b49212b09b47b2f",
         "GUID:6546d7765b4165b40850b3667f981c26",
         "GUID:586823c4ce65db347bd8065ac030e7ad",

@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using MKL.SortManager;
 using TMPro;
 
 namespace MKL.InventoryUI
