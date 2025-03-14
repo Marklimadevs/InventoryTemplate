@@ -1,6 +1,6 @@
 # Templete_Inventory
 
-- Demo in : https://marklima.itch.io/templete-inventory
+- Demo in : [https://marklima.itch.io/templete-inventory](https://marklima.itch.io/templete-inventory)
 
 -Features
   -Inventory System
